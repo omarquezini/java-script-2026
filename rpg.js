@@ -19,6 +19,23 @@ let classe = "iniciante";
 
 while (true) {
 
+    if (classe == "iniciante" && level >= 20) {
+        classe = "guerreiro";
+        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+    }
+    else if (classe == "guerreiro" && level >= 40) {
+        classe = "cavaleiro";
+        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+    }
+    else if (classe == "cavaleiro" && level >= 60) {
+        classe = "paladino";
+        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+    }
+    else if (classe == "paladino" && level >= 80) {
+        classe = "santo";
+        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+    }
+
 
     let miss = Math.floor(Math.random() * 2) + 1; // Número aleatório entre 1 e 2
 
@@ -86,5 +103,47 @@ while (true) {
         else if (inimigoEscolha == 2 || missenimigo == 2) {
             console.log("Mas a magia do goblin falhou!");
         }
+    }
+
+    if (inimigo == 2) {
+        console.log("Um esqueleto apareceu!");
+        
+        if (inimigoEscolha == 1 || missenimigo == 1) {
+            console.log("O esqueleto atacou e causou 5 de dano!");
+            vidada -= 5;
+        }
+        else if (inimigoEscolha == 1 || missenimigo == 2) {
+            console.log("Mas o ataque do esqueleto errou!");
+        }
+        if (inimigoEscolha == 2) {
+            console.log("O esqueleto usou magia e causou 15 de dano!");
+            vidada -= 15;
+        }
+        else if (inimigoEscolha == 2 || missenimigo == 2) {
+            console.log("Mas a magia do esqueleto falhou!");
+        }
+    }
+
+    if (vidada <= 0) {
+        console.log(`${nome} foi derrotado! Fim de jogo.`);
+        break;
+    }
+
+    console.log("");
+    
+    if (inimigoVida1 <= 0) {
+        console.log("O inimigo foi derrotado!");
+        level += 10;
+        ATK += 5;
+        mana += 2;
+        inimigoVida1 = 30 + (level * 2);
+        inimigoATK1 = 3 + (level * 1);
+        console.log(`Parabéns! Você subiu para o nível ${level}!`);
+        console.log(`Seu ataque aumentou para ${ATK} e sua mana aumentou para ${mana}.`);
+    }
+
+    if (classe == "santo" && level >= 100) {
+        console.log("Parabéns! Você atingiu o nível máximo e se tornou um santo lendário!");
+        break;
     }
 }

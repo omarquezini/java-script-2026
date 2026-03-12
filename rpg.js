@@ -1,149 +1,187 @@
 const readline = require("readline-sync");
 
-let vidada = 100;
-let ATK = 10;
-let mana = 5;
-level = 1;
+console.log("================================");
+console.log("==== BEM VINDO AO RPG TEXT ====");
+console.log("================================");
 
-let inimigoVida1 = 30;
-let inimigoATK1 = 3;
+let nome = readline.question("Nome do seu personagem: ");
 
+let vida = 100;
+let vidaMax = 100;
+let mana = 20;
+let manaMax = 20;
+let atk = 10;
 
-console.log("[]=============================[]");
-console.log("[]==== BEM VINDO AO RPG! ======[]");
-console.log("[]=============================[]");
-
-let nome = readline.question("Digite o nome do seu personagem: ");
+let level = 1;
+let xp = 0;
+let xpProx = 50;
 
 let classe = "iniciante";
 
-while (true) {
+let pocoes = 3;
 
-    if (classe == "iniciante" && level >= 20) {
+function evoluirClasse() {
+
+    if (classe == "iniciante" && level >= 5) {
         classe = "guerreiro";
-        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+        atk += 5;
+        vidaMax += 20;
+        console.log("Você evoluiu para GUERREIRO!");
     }
-    else if (classe == "guerreiro" && level >= 40) {
+
+    else if (classe == "guerreiro" && level >= 10) {
         classe = "cavaleiro";
-        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+        atk += 10;
+        vidaMax += 30;
+        console.log("Você evoluiu para CAVALEIRO!");
     }
-    else if (classe == "cavaleiro" && level >= 60) {
+
+    else if (classe == "cavaleiro" && level >= 15) {
         classe = "paladino";
-        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
-    }
-    else if (classe == "paladino" && level >= 80) {
-        classe = "santo";
-        console.log(`Parabéns! Você evoluiu para a classe ${classe}!`);
+        atk += 15;
+        manaMax += 10;
+        console.log("Você evoluiu para PALADINO!");
     }
 
+}
 
-    let miss = Math.floor(Math.random() * 2) + 1; // Número aleatório entre 1 e 2
+function criarInimigo() {
 
-    let missenimigo = Math.floor(Math.random() * 2) + 1; // Número aleatório entre 1 e 2
-    let inimigoEscolha = Math.floor(Math.random() * 2) + 1; // Número aleatório entre 1 e 2
+    let tipo = Math.floor(Math.random()*3)+1;
 
-     let inimigo = Math.floor(Math.random() * 5) + 1; // Número aleatório entre 1 e 5
+    if (tipo == 1){
+        return {nome:"Goblin", vida:30, atk:5, xp:20}
+    }
 
-    console.log(`${nome} = Vida: ${vidada} || Mana: ${mana}`);
-    console.log("");
+    if (tipo == 2){
+        return {nome:"Esqueleto", vida:40, atk:7, xp:30}
+    }
 
-    let escolha = readline.question("Escolha uma ação: [1] Atacar, [2] Usar Magia || [3] Meditar, [4] Curar: ");
-    console.log("");
-    console.log("");
+    if (tipo == 3){
+        return {nome:"Orc", vida:60, atk:10, xp:50}
+    }
 
-    if (escolha == 1 || miss == 1) {
-        console.log(`${nome} atacou o inimigo e causou ${ATK} de dano!`);
-    } 
-    else if (escolha == 1 || miss == 2) {
-            console.log("Mas o ataque errou!");
-        } 
+}
 
-    else if (escolha == 2 || miss == 1) {
-        if (mana >= 5) {
-            console.log(`${nome} usou magia e causou 20 de dano!`);
-            mana -= 5;
-        } 
-        else if (escolha == 2 || miss == 2) {
-            console.log("Mas a magia falhou!");
+while(true){
+
+console.log("\n===============================");
+console.log(`${nome} | Classe: ${classe} | Level: ${level}`);
+console.log(`Vida: ${vida}/${vidaMax} | Mana: ${mana}/${manaMax}`);
+console.log(`XP: ${xp}/${xpProx} | Poções: ${pocoes}`);
+console.log("===============================\n");
+
+let inimigo = criarInimigo();
+
+console.log(`Um ${inimigo.nome} apareceu!`);
+
+while(inimigo.vida > 0){
+
+console.log(`\n${inimigo.nome} Vida: ${inimigo.vida}`);
+
+let escolha = readline.question(
+"[1] Atacar\n[2] Magia\n[3] Meditar\n[4] Usar Poção\nEscolha: "
+);
+
+let miss = Math.random();
+
+if(escolha == 1){
+
+    if(miss < 0.8){
+        console.log(`Você causou ${atk} de dano`);
+        inimigo.vida -= atk;
+    }else{
+        console.log("Você errou o ataque!");
+    }
+
+}
+
+else if(escolha == 2){
+
+    if(mana >= 10){
+
+        if(miss < 0.9){
+            console.log("Magia causou 25 de dano!");
+            inimigo.vida -= 25;
+            mana -= 10;
+        }else{
+            console.log("Magia falhou!");
+            mana -= 10;
         }
-        else {
-            console.log("Mana insuficiente para usar magia!");
-        }
+
+    }else{
+        console.log("Mana insuficiente!");
     }
 
-    if (escolha == 3) {
-        console.log(`${nome} está meditando e recuperando mana.`);
-        mana += 5;
+}
+
+else if(escolha == 3){
+
+    console.log("Você meditou e recuperou mana");
+    mana += 10;
+    if(mana > manaMax) mana = manaMax;
+
+}
+
+else if(escolha == 4){
+
+    if(pocoes > 0){
+        console.log("Você usou uma poção!");
+        vida += 30;
+        pocoes--;
+
+        if(vida > vidaMax) vida = vidaMax;
+    }else{
+        console.log("Você não tem poções!");
     }
 
-    if (escolha == 4) {
-        console.log(`${nome} usou uma poção de cura e recuperou 20 de vida!`);
-        vidada += 20;
-    }
+    console.log("\n===============================");
+    console.log(`${nome} | Classe: ${classe} | Level: ${level}`);
+    console.log(`Vida: ${vida}/${vidaMax} | Mana: ${mana}/${manaMax}`);
+    console.log(`XP: ${xp}/${xpProx} | Poções: ${pocoes}`);
+    console.log("===============================\n");
 
-    console.log("");
+}
 
+if(inimigo.vida <= 0){
+    console.log(`Você derrotou o ${inimigo.nome}!`);
+    xp += inimigo.xp;
+    break;
+}
 
-    if (inimigo == 1) {
-        console.log("Um goblin apareceu!");
+let missInimigo = Math.random();
 
-        if (inimigoEscolha == 1 || missenimigo == 1) {
-            console.log("O goblin atacou e causou 3 de dano!");
-            vidada -= inimigoATK1;
-        } 
+if(missInimigo < 0.8){
+    console.log(`${inimigo.nome} atacou e causou ${inimigo.atk}`);
+    vida -= inimigo.atk;
+}else{
+    console.log(`${inimigo.nome} errou o ataque`);
+}
 
-        else if (inimigoEscolha == 1 || missenimigo == 2) {
-            console.log("Mas o ataque do goblin errou!");
-        }
-        if (inimigoEscolha == 2) {
-            console.log("O goblin usou magia e causou 10 de dano!");
-            vidada -= 10;
-        }
+if(vida <= 0){
+    console.log("\nVOCÊ MORREU! FIM DE JOGO");
+    process.exit();
+}
 
-        else if (inimigoEscolha == 2 || missenimigo == 2) {
-            console.log("Mas a magia do goblin falhou!");
-        }
-    }
+}
 
-    if (inimigo == 2) {
-        console.log("Um esqueleto apareceu!");
-        
-        if (inimigoEscolha == 1 || missenimigo == 1) {
-            console.log("O esqueleto atacou e causou 5 de dano!");
-            vidada -= 5;
-        }
-        else if (inimigoEscolha == 1 || missenimigo == 2) {
-            console.log("Mas o ataque do esqueleto errou!");
-        }
-        if (inimigoEscolha == 2) {
-            console.log("O esqueleto usou magia e causou 15 de dano!");
-            vidada -= 15;
-        }
-        else if (inimigoEscolha == 2 || missenimigo == 2) {
-            console.log("Mas a magia do esqueleto falhou!");
-        }
-    }
+if(xp >= xpProx){
 
-    if (vidada <= 0) {
-        console.log(`${nome} foi derrotado! Fim de jogo.`);
-        break;
-    }
+    level++;
+    xp = 0;
+    xpProx += 30;
 
-    console.log("");
-    
-    if (inimigoVida1 <= 0) {
-        console.log("O inimigo foi derrotado!");
-        level += 10;
-        ATK += 5;
-        mana += 2;
-        inimigoVida1 = 30 + (level * 2);
-        inimigoATK1 = 3 + (level * 1);
-        console.log(`Parabéns! Você subiu para o nível ${level}!`);
-        console.log(`Seu ataque aumentou para ${ATK} e sua mana aumentou para ${mana}.`);
-    }
+    vidaMax += 10;
+    manaMax += 5;
+    atk += 3;
 
-    if (classe == "santo" && level >= 100) {
-        console.log("Parabéns! Você atingiu o nível máximo e se tornou um santo lendário!");
-        break;
-    }
+    vida = vidaMax;
+    mana = manaMax;
+
+    console.log(`\nLEVEL UP! Agora você é nível ${level}`);
+
+    evoluirClasse();
+
+}
+
 }

@@ -18,3 +18,5 @@ while (numero < amigos) {
 
 console
 console.log(`Esses são os amigos do(a) ${vetor}: ${broderagem}`);
+
+
